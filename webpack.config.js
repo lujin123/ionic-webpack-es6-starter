@@ -12,7 +12,8 @@ module.exports = {
     // here we will output the bundled files
     output: {
         path: __dirname + '/www',
-        filename: "bundle.js"
+        filename: "bundle.js",
+        publicPath: '/'
     },
     module: {
         // loaders allow you to preproccess file when your require them
@@ -28,56 +29,60 @@ module.exports = {
                 exclude: [/www\/lib/, /node_modules/],
                 // presets for the babel loader, supporting stage-2 es6 funcitonality
                 query: {
-                  presets: ['es2015', 'stage-2']
+                    presets: ['es2015', 'stage-2']
                 }
             },
             {
                 // we will proccess scss files when required
-               test: /\.scss$/,
-               // we will extract the output file to a different location and will inject it manualy to the page
-               // used for performance boost and good for large apps.
-               // we will also generate sourcemaps, disable in production
-               loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap', {
-                   allChunks: true
-               })
+                test: /\.(scss|css)$/,
+                // we will extract the output file to a different location and will inject it manualy to the page
+                // used for performance boost and good for large apps.
+                // we will also generate sourcemaps, disable in production
+                loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap', {
+                    allChunks: true
+                })
             },
             {
-                test   : /\.woff/,
-                loader : 'url?prefix=font/&limit=10000&mimetype=application/font-woff&name=assets/[hash].[ext]'
+                test: /\.woff/,
+                loader: 'url?prefix=font/&limit=10000&mimetype=application/font-woff&name=assets/[hash].[ext]'
             },
             {
-                test   : /\.ttf/,
-                loader : 'file?prefix=font/&name=assets/[hash].[ext]'
+                test: /\.ttf/,
+                loader: 'file?prefix=font/&name=assets/[hash].[ext]'
             },
             {
-                test   : /\.eot/,
-                loader : 'file?prefix=font/&name=assets/[hash].[ext]'
+                test: /\.eot/,
+                loader: 'file?prefix=font/&name=assets/[hash].[ext]'
             },
             {
-                test   : /\.svg/,
-                loader : 'file?prefix=font/&name=assets/[hash].[ext]'
+                test: /\.svg/,
+                loader: 'file?prefix=font/&name=assets/[hash].[ext]'
             },
             // we will load all html files raw, it will allow your to require html files as string templates
             // inside your components, directives
             {
-              test: /\.html$/,
-              loader: "raw-loader"
+                test: /\.html$/,
+                loader: "raw-loader"
+            },
+            {
+                test: /\.(png|jpg|jpeg|gif)$/,
+                loader: "file-loader?name=img/[hash:8].[name].[ext]"
             }
         ]
     },
     plugins: [
         // here we will specify the output css file name when etracted with all the scss compiled
-       new ExtractTextPlugin('ionic.app.css', {
-           allChunks: true
-       })
-   ],
-   // When requiring modules in your code, require and import will first look in this directories
-   // so you won't need to wrie relative paths to them
+        new ExtractTextPlugin('ionic.app.css', {
+            allChunks: true
+        })
+    ],
+    // When requiring modules in your code, require and import will first look in this directories
+    // so you won't need to wrie relative paths to them
     resolve: {
         root: __dirname + "/www/",
         modulesDirectories: ["node_modules", "lib", "scss"],
         // you can add here scss extension if you want.
         // this will allow you to require('somejsfile') with out the .js extension
-        extensions: ['', '.js']
+        extensions: ['', '.js', '.scss']
     }
 };
